@@ -4,6 +4,7 @@ package separateinterface
 
 import (
 	"context"
+	"go/ast"
 	"go/token"
 )
 
@@ -28,14 +29,17 @@ type ActionInput struct {
 	ModelsFileName string
 	// QuerierFileName The file name for the sqlc-generated Querier file.
 	QuerierFileName string
-	// AditionalQuerierFiles A list of other files that contains querier impl.
-	AditionalQuerierFiles []string
+	// BatchFileName The file name for the sqlc-generated Batch file.
+	BatchFileName string
+	// CopyFromFileName The file name for the sqlc-generated CopyFrom file.
+	CopyFromFileName string
 }
 
 func Action(_ context.Context, input ActionInput) error {
 	r := &runner{
-		input: input,
-		fset:  token.NewFileSet(),
+		input:       input,
+		fset:        token.NewFileSet(),
+		extraIfaces: map[string]ast.Decl{},
 	}
 	return r.Run()
 }
